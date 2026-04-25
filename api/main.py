@@ -3,11 +3,14 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from routes.conversations import router as conv_router
 from routes.realtime import router as ws_router
+from routes.transcribe import router as transcribe_router
 import os
 
 app = FastAPI(title='Agent Assist Platform', version='1.0.0')
+
 app.include_router(conv_router)
 app.include_router(ws_router)
+app.include_router(transcribe_router)
 app.mount('/static', StaticFiles(directory='static'), name='static')
 
 @app.get('/health')
