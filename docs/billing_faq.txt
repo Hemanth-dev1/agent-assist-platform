@@ -1,0 +1,26 @@
+BILLING AND PAYMENT - SUPPORT KNOWLEDGE BASE
+
+Q: Customer says they were charged twice this month.
+A: 1) Pull account in CRM. 2) Check payment history tab for duplicate entries.
+   3) If confirmed duplicate: initiate refund via Billing > Refunds > New Refund.
+   4) Refund processes in 5-7 business days to original payment method.
+   5) Send confirmation SMS via CRM > Notifications.
+   Resolution time: Under 5 minutes.
+
+Q: Customer wants to dispute a roaming charge.
+A: 1) Verify the customer was in a roaming zone on the dates in question.
+   2) If customer claims they did not travel: escalate to Fraud team via ticket.
+   3) If confirmed roaming: explain the Rs.30/GB rate.
+   4) Offer one-time 50% waiver if first dispute.
+   5) Apply waiver via Billing > Adjustments. Requires supervisor approval over Rs.500.
+
+Q: Customer did not receive cashback promised during plan activation.
+A: 1) Check activation date - cashback posts within 30 days.
+   2) Verify customer meets eligibility: recharge above Rs.299, new activation only.
+   3) If eligible and 30 days passed: raise cashback ticket via CRM > Escalations.
+   4) Cashback credited within 3 working days of ticket resolution.
+
+Q: Customer wants itemised bill breakdown.
+A: 1) Go to CRM > Billing > Bill Details > Select month.
+   2) Download PDF and share via registered email.
+   3) Explain each section: base plan, add-ons, taxes, adjustments.

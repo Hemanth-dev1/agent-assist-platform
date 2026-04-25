@@ -1,0 +1,28 @@
+PLAN CHANGE AND UPGRADE - SUPPORT KNOWLEDGE BASE
+
+Q: Customer wants to upgrade from prepaid to postpaid.
+A: 1) Check if number is eligible: active for 90+ days, no pending dues.
+   2) Explain postpaid benefits: higher data, roaming included, monthly billing.
+   3) Initiate migration via CRM > Plan > Migrate to Postpaid.
+   4) Customer needs to submit ID proof at nearest store within 7 days.
+   5) Migration completes within 24 hours of document verification.
+
+Q: Customer wants to add an international roaming pack.
+A: 1) Ask destination country and travel dates.
+   2) Recommend correct pack: Asia Pack Rs.999/7days, Global Pack Rs.2499/15days.
+   3) Activate via CRM > Add-ons > Roaming > Select Pack.
+   4) Pack activates within 2 hours. Confirm via SMS.
+   5) Remind customer to enable data roaming in phone settings.
+
+Q: Customer wants to downgrade their plan.
+A: 1) Note current plan and new requested plan.
+   2) Warn about feature loss: reduced data, speed throttling after limit.
+   3) Downgrade effective next billing cycle - cannot be same day.
+   4) Process via CRM > Plan > Change Plan > Select lower tier.
+   5) Send confirmation SMS with effective date.
+
+Q: Customer asking about family plan or shared data.
+A: 1) Family plan requires minimum 2 connections, maximum 6.
+   2) Primary account holder manages all connections.
+   3) Shared data pool: 100GB shared across all lines at Rs.1499/month.
+   4) Initiate via CRM > Account > Family Plan > Add Members.

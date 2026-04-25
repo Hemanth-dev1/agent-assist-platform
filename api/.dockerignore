@@ -1,0 +1,8 @@
+.git
+.gitignore
+__pycache__
+*.pyc
+*.log
+.env
+fix_permissions.sh
+get_project_number.sh

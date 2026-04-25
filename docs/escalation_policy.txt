@@ -1,0 +1,30 @@
+ESCALATION POLICY - SUPPORT KNOWLEDGE BASE
+
+Q: When should an agent escalate to Tier 2?
+A: Escalate immediately in these situations:
+   1) Customer threatens legal action or mentions consumer forum.
+   2) Issue unresolved after 2 previous contacts (check contact history).
+   3) Refund request above Rs.2000.
+   4) Suspected fraud or account compromise.
+   5) Network outage affecting more than 1 customer in same area.
+   Process: CRM > Ticket > New > Priority High > Assign to Tier2 Queue.
+
+Q: Customer is extremely angry and threatening to cancel.
+A: 1) Do NOT put on hold without warning - always ask permission.
+   2) Acknowledge frustration: "I completely understand your frustration."
+   3) Offer retention pack: 1 month free add-on or Rs.100 credit (one-time).
+   4) If still wants to cancel: transfer to Retention team, do not process cancellation yourself.
+   5) Document all interaction notes in CRM before transfer.
+
+Q: How to handle a suspected SIM swap fraud call.
+A: 1) Do NOT confirm any account details until identity verified.
+   2) Ask 3 security questions from CRM > Security tab.
+   3) If answers fail: lock account immediately via CRM > Account > Security Lock.
+   4) Raise fraud ticket: CRM > Escalations > Fraud > SIM Swap Suspected.
+   5) Inform customer their account is locked for safety and fraud team will call within 2 hours.
+
+Q: Network complaint - customer has no signal for more than 4 hours.
+A: 1) Check network status page for known outages in customer area.
+   2) If known outage: provide estimated resolution time, offer 1-day credit.
+   3) If no known outage: raise network ticket with tower ID and customer location.
+   4) Escalate to Network Operations if more than 3 customers report same area.
