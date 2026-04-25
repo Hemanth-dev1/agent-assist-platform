@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Assist Panel</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f1117; color: #e0e0e0; height: 100vh; display: flex; flex-direction: column; }
+  header { background: #1a1d2e; padding: 12px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #2a2d3e; }
+  header h1 { font-size: 16px; color: #7c6af7; font-weight: 600; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #f44; }
+  .status-dot.connected { background: #4caf50; }
+  .status-text { font-size: 12px; color: #888; }
+  .main { display: grid; grid-template-columns: 1fr 1fr; gap: 0; flex: 1; overflow: hidden; }
+  .panel { display: flex; flex-direction: column; overflow: hidden; }
+  .panel-header { padding: 10px 16px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #888; background: #13151f; border-bottom: 1px solid #2a2d3e; }
+  .transcript { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .turn { padding: 10px 14px; border-radius: 10px; max-width: 85%; font-size: 14px; line-height: 1.5; }
+  .turn.customer { background: #1e2235; border-left: 3px solid #7c6af7; align-self: flex-start; }
+  .turn.agent { background: #1a2a1a; border-left: 3px solid #4caf50; align-self: flex-end; }
+  .turn .label { font-size: 10px; color: #888; margin-bottom: 4px; text-transform: uppercase; }
+  .input-area { padding: 12px 16px; border-top: 1px solid #2a2d3e; display: flex; gap: 8px; background: #13151f; }
+  .input-area input { flex: 1; background: #1a1d2e; border: 1px solid #2a2d3e; color: #e0e0e0; padding: 8px 12px; border-radius: 6px; font-size: 14px; outline: none; }
+  .input-area input:focus { border-color: #7c6af7; }
+  .btn { padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
+  .btn-customer { background: #7c6af7; color: white; }
+  .btn-agent { background: #4caf50; color: white; }
+  .suggestions-panel { border-left: 1px solid #2a2d3e; display: flex; flex-direction: column; overflow: hidden; }
+  .suggestions-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+  .section-title { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .smart-reply-btn { display: block; width: 100%; text-align: left; padding: 10px 14px; background: #1a1d2e; border: 1px solid #2a2d3e; color: #e0e0e0; border-radius: 8px; cursor: pointer; font-size: 13px; margin-bottom: 6px; transition: all 0.2s; }
+  .smart-reply-btn:hover { border-color: #4caf50; background: #1a2a1a; }
+  .confidence { font-size: 10px; color: #4caf50; float: right; }
+  .knowledge-card { background: #1a1d2e; border: 1px solid #2a2d3e; border-radius: 8px; padding: 14px; font-size: 13px; line-height: 1.6; }
+  .knowledge-card .query { font-size: 11px; color: #7c6af7; margin-bottom: 8px; font-weight: 600; }
+  .sentiment-bar-wrap { padding: 10px 16px; border-top: 1px solid #2a2d3e; background: #13151f; }
+  .sentiment-label { font-size: 11px; color: #888; margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .sentiment-bar { height: 6px; background: #2a2d3e; border-radius: 3px; overflow: hidden; }
+  .sentiment-fill { height: 100%; border-radius: 3px; transition: all 0.5s; width: 50%; background: #4caf50; }
+  .empty-state { color: #444; font-size: 13px; text-align: center; margin-top: 40px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="status-dot" id="statusDot"></div>
+  <h1>🤖 Agent Assist Panel</h1>
+  <span class="status-text" id="statusText">Connecting...</span>
+  <span style="margin-left:auto;font-size:12px;color:#555;" id="convId"></span>
+</header>
+
+<div class="main">
+  <div class="panel">
+    <div class="panel-header">📞 Live Transcript</div>
+    <div class="transcript" id="transcript">
+      <div class="empty-state">Waiting for conversation to start...</div>
+    </div>
+    <div class="sentiment-bar-wrap">
+      <div class="sentiment-label">
+        <span>😠 Negative</span>
+        <span id="sentimentScore">Sentiment: neutral</span>
+        <span>😊 Positive</span>
+      </div>
+      <div class="sentiment-bar">
+        <div class="sentiment-fill" id="sentimentFill"></div>
+      </div>
+    </div>
+    <div class="input-area">
+      <input type="text" id="msgInput" placeholder="Type message..." onkeydown="if(event.key==='Enter') sendAs('customer')">
+      <button class="btn btn-customer" onclick="sendAs('customer')">Customer</button>
+      <button class="btn btn-agent" onclick="sendAs('agent')">Agent</button>
+    </div>
+  </div>
+
+  <div class="suggestions-panel">
+    <div class="panel-header">💡 AI Suggestions</div>
+    <div class="suggestions-body" id="suggestionsBody">
+      <div class="empty-state">Suggestions will appear here as the conversation progresses...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const AGENT_ID = 'agent_001';
+  const WS_URL = `wss://${window.location.host}/ws/assist/${AGENT_ID}`;
+  let ws, agentInput = document.getElementById('msgInput');
+
+  function connect() {
+    ws = new WebSocket(WS_URL);
+
+    ws.onopen = () => {
+      document.getElementById('statusDot').className = 'status-dot connected';
+      document.getElementById('statusText').textContent = 'Connected — Session starting...';
+    };
+
+    ws.onmessage = (e) => {
+      const msg = JSON.parse(e.data);
+      if (msg.type === 'session_started') {
+        document.getElementById('statusText').textContent = 'Live — Call in progress';
+        document.getElementById('convId').textContent = `Conv: ${msg.conversation_id}`;
+        document.getElementById('transcript').innerHTML = '';
+      } else if (msg.type === 'suggestions') {
+        addTurn(msg.role, msg.text);
+        renderSuggestions(msg.suggestions);
+        updateSentiment(msg.suggestions.sentiment);
+      }
+    };
+
+    ws.onclose = () => {
+      document.getElementById('statusDot').className = 'status-dot';
+      document.getElementById('statusText').textContent = 'Disconnected';
+      setTimeout(connect, 3000);
+    };
+  }
+
+  function sendAs(role) {
+    const text = agentInput.value.trim();
+    if (!text || !ws || ws.readyState !== 1) return;
+    ws.send(JSON.stringify({ text, role }));
+    agentInput.value = '';
+  }
+
+  function addTurn(role, text) {
+    const t = document.getElementById('transcript');
+    if (t.querySelector('.empty-state')) t.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = `turn ${role}`;
+    div.innerHTML = `<div class="label">${role === 'customer' ? '👤 Customer' : '🎧 Agent'}</div>${text}`;
+    t.appendChild(div);
+    t.scrollTop = t.scrollHeight;
+  }
+
+  function renderSuggestions(s) {
+    const body = document.getElementById('suggestionsBody');
+    body.innerHTML = '';
+
+    if (s.smart_replies && s.smart_replies.length > 0) {
+      const title = document.createElement('div');
+      title.className = 'section-title';
+      title.textContent = '⚡ Smart Replies';
+      body.appendChild(title);
+      s.smart_replies.forEach(r => {
+        const btn = document.createElement('button');
+        btn.className = 'smart-reply-btn';
+        btn.innerHTML = `${r.reply} <span class="confidence">${Math.round(r.confidence * 100)}%</span>`;
+        btn.onclick = () => { agentInput.value = r.reply; agentInput.focus(); };
+        body.appendChild(btn);
+      });
+    }
+
+    if (s.knowledge_articles && s.knowledge_articles.length > 0) {
+      const title = document.createElement('div');
+      title.className = 'section-title';
+      title.style.marginTop = '12px';
+      title.textContent = '📚 Knowledge Base';
+      body.appendChild(title);
+      s.knowledge_articles.forEach(a => {
+        const card = document.createElement('div');
+        card.className = 'knowledge-card';
+        card.innerHTML = `<div class="query">🔍 ${a.query}</div>${a.answer}`;
+        body.appendChild(card);
+      });
+    }
+
+    if ((!s.smart_replies || s.smart_replies.length === 0) &&
+        (!s.knowledge_articles || s.knowledge_articles.length === 0)) {
+      body.innerHTML = '<div class="empty-state">No suggestions for this utterance</div>';
+    }
+  }
+
+  function updateSentiment(score) {
+    const pct = Math.round(((score + 1) / 2) * 100);
+    const fill = document.getElementById('sentimentFill');
+    fill.style.width = pct + '%';
+    fill.style.background = score < -0.3 ? '#f44336' : score > 0.3 ? '#4caf50' : '#ff9800';
+    document.getElementById('sentimentScore').textContent = `Sentiment: ${score.toFixed(2)}`;
+  }
+
+  connect();
+</script>
+</body>
+</html>
